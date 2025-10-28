@@ -1,0 +1,24 @@
+{
+  "name": "supersliver-ui",
+  "version": "1.0.0",
+  "description": "Sliver Backend for interaction with Sliver Server",
+  "homepage": "https://github.com/max-49/supersliver-ui#readme",
+  "bugs": {
+    "url": "https://github.com/max-49/supersliver-ui/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/max-49/supersliver-ui.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "sliver-script": "^1.2.5"
+  }
+}
