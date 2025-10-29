@@ -82,3 +82,24 @@ export async function getSessionInfo(sid, timeout) {
         arch: session.Arch
     }
 }
+
+// Open an interactive PTY shell tunnel for a session
+export async function openShell(sid, timeout = 30) {
+  const client = await getClient()
+
+  // Verify session exists and determine OS
+  const sessions = await client.sessions()
+  const session = sessions?.find(s => s.ID === sid)
+  if (!session) {
+    throw new Error(`Session ${sid} not found`)
+  }
+
+  const os = (session.OS || '').toLowerCase()
+  const isWindows = os.includes('windows')
+  const shellPath = isWindows ? 'cmd.exe' : '/bin/sh'
+
+  const interactive = await client.interactSession(sid)
+  const tunnel = await interactive.shell(shellPath, true, timeout)
+
+  return { tunnel, shellPath, isWindows }
+}

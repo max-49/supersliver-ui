@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "express": "^5.1.0",
-    "sliver-script": "^1.2.5"
+    "sliver-script": "^1.2.5",
+    "ws": "^8.18.3"
   }
 }

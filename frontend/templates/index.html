@@ -4,7 +4,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>SuperSliver UI</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm/css/xterm.css">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     </head>
     <body>
@@ -13,28 +14,41 @@
                 <h1>SuperSliver UI <small>Sessions</small></h1>
             </div>
 
+            <!-- Actions toolbar -->
+            <div class="toolbar clearfix">
+                <button id="btnExecSelected" class="btn btn-success" disabled>
+                    <span class="glyphicon glyphicon-console"></span> Execute on Selected
+                </button>
+            </div>
+
             {% if session_info and session_info|length > 0 %}
             <div class="table-responsive">
                 <table class="table table-striped table-hover session-table">
                     <thead>
                         <tr>
-                            <th>Session Name</th>
-                            <th>Session ID</th>
-                            <th>Hostname</th>
-                            <th>OS</th>
-                            <th>Arch</th>
+                            <th style="width:36px;">
+                                <input type="checkbox" id="selectAll">
+                            </th>
+                            <th class="sortable" data-col="name">Session Name <span class="sort-indicator"></span></th>
+                            <th class="sortable" data-col="sid">Session ID <span class="sort-indicator"></span></th>
+                            <th class="sortable" data-col="hostname">Hostname <span class="sort-indicator"></span></th>
+                            <th class="sortable" data-col="os">OS <span class="sort-indicator"></span></th>
+                            <th class="sortable" data-col="arch">Arch <span class="sort-indicator"></span></th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for s in session_info %}
                         <tr class="session-row" data-session-id="{{ s['sid'] }}">
-                            <td class="session-name-cell">{{ s["name"] }}</td>
-                            <td><code style="font-size:12px">{{ s["sid"] }}</code></td>
-                            <td class="hostname-cell">{{ s["hostname"] }}</td>
-                            <td>
+                            <td class="select-cell">
+                                <input type="checkbox" class="row-select" value="{{ s['sid'] }}">
+                            </td>
+                            <td class="session-name-cell" data-sort="{{ s['name']|e }}">{{ s["name"] }}</td>
+                            <td class="sid-cell" data-sort="{{ s['sid']|e }}"><code style="font-size:12px">{{ s["sid"] }}</code></td>
+                            <td class="hostname-cell" data-sort="{{ s['hostname']|e }}">{{ s["hostname"] }}</td>
+                            <td class="os-cell" data-sort="{{ s['os']|e }}">
                                 <span class="label label-info label-os">{{ s["os"] }}</span>
                             </td>
-                            <td>{{ s["arch"] }}</td>
+                            <td class="arch-cell" data-sort="{{ s['arch']|e }}">{{ s["arch"] }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -55,6 +69,29 @@
                     </div>
                     <div class="modal-body">
                         <p>Coming soon: execute commands or open an interactive shell for session <code id="modalSid"></code>.</p>
+                        <div class="text-right">
+                            <button type="button" id="openShellBtn" class="btn btn-primary">
+                                <span class="glyphicon glyphicon-blackboard"></span> Open Shell
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Shell Modal -->
+        <div id="shellModal" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Interactive Shell - <code id="shellSid"></code></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div id="terminal" style="width:100%;height:420px;background:#000;color:#fff;"></div>
+                        <div class="help-block">Type commands directly. Close the modal to end the session.</div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -63,8 +100,35 @@
             </div>
         </div>
 
+        <!-- Execute on Selected Modal -->
+        <div id="execModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Execute Command on Selected</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="commandInput">Command</label>
+                            <input type="text" class="form-control" id="commandInput" placeholder="e.g. whoami">
+                            <p class="help-block">This will run on all selected sessions. Backend wiring to be added.</p>
+                        </div>
+                        <div id="selectedCount" class="text-muted"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="confirmExecBtn">
+                            <span class="glyphicon glyphicon-play"></span> Run
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xterm/lib/xterm.min.js"></script>
         <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     </body>
 </html>

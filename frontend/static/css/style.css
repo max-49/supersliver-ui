@@ -26,3 +26,25 @@ body {
     border-radius: 6px; 
     box-shadow: 0 2px 8px rgba(0,0,0,0.06); 
 }
+
+/* Toolbar spacing */
+.toolbar { 
+    margin-bottom: 12px; 
+}
+
+/* Selection column */
+td.select-cell, th.select-cell { 
+    text-align: center; 
+}
+
+/* Sortable headers */
+th.sortable { 
+    cursor: pointer; 
+    user-select: none; 
+}
+
+th.sortable .sort-indicator { 
+    font-size: 10px; 
+    margin-left: 6px; 
+    color: #888;
+}

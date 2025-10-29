@@ -4,6 +4,8 @@ import atexit
 import signal
 import subprocess
 import threading
+import time
+import requests
 
 from frontend import app
 
@@ -62,11 +64,28 @@ from frontend import app
 #     atexit.register(_cleanup)
 #     return proc
 
+# def wait_for_node(url='http://localhost:3000/health', timeout=15):
+#     """Wait for Node backend to become healthy."""
+#     start = time.time()
+#     while time.time() - start < timeout:
+#         try:
+#             r = requests.get(url, timeout=2)
+#             if r.ok:
+#                 return True
+#         except Exception:
+#             pass
+#         time.sleep(0.5)
+#     return False
+
 
 if __name__ == '__main__':
     # 1) Start Node backend in background
     # node_proc = start_node_backend()
     # print(f"Started Node backend (pid={node_proc.pid}) on http://localhost:3000")
+
+    # # Optionally wait for Node to be ready
+    # if not wait_for_node():
+    #     print("Warning: Node backend health check failed; UI may show connection errors until it starts.")
 
     # 2) Start Flask app (frontend)
     app.run(host="0.0.0.0", port=5001, debug=True)
