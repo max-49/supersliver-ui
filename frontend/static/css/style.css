@@ -1,0 +1,28 @@
+/* SuperSliver UI custom styles */
+body { 
+    padding: 24px; 
+}
+
+.page-title { 
+    margin-bottom: 24px; 
+}
+
+.table>tbody>tr>td, .table>thead>tr>th { 
+    vertical-align: middle; 
+}
+
+/* Make rows feel interactive */
+.session-table tbody tr { 
+    cursor: pointer; 
+}
+
+.label-os { 
+    font-weight: normal; 
+    font-size: 12px; 
+}
+
+.session-table { 
+    background: #fff; 
+    border-radius: 6px; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06); 
+}

@@ -71,12 +71,14 @@ export async function getSessionInfo(sid, timeout) {
         throw new Error(`Session ${sid} not found`)
     }
 
+    const hostname_info = await execCmd(sid, "hostname -f")
+    const client_hostname = hostname_info["stdout"]
+
     return {
         name: session.Name,
         sid: session.ID,
-        remote_addr: session.RemoteAddress,
+        hostname: client_hostname,
         os: session.OS,
         arch: session.Arch
     }
 }
-

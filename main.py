@@ -69,4 +69,4 @@ if __name__ == '__main__':
     # print(f"Started Node backend (pid={node_proc.pid}) on http://localhost:3000")
 
     # 2) Start Flask app (frontend)
-    app.run(host="0.0.0.0", port=5001)
+    app.run(host="0.0.0.0", port=5001, debug=True)
